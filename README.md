@@ -20,8 +20,21 @@ dependencyResolutionManagement {
 
 
 ### Step 2: Add Dependency
+Add in your **module: build.gradle**:
 ```gradle
-implementation 'com.github.AppDeveloperAndroid:maintenance-sdk:1.0.3'
+dependencies {
+    implementation 'com.github.AppDeveloperAndroid:maintenance-sdk:1.0.3'
+    implementation 'com.google.firebase:firebase-config'
+    implementation 'com.google.firebase:firebase-analytics'
+}
+apply plugin: 'com.google.gms.google-services'
+```
+
+Add in your **project: build.gradle**:
+```gradle
+dependencies {
+    classpath 'com.google.gms:google-services:4.3.15'
+}
 ```
 
 ### Step 3: Application class
