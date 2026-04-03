@@ -23,21 +23,21 @@ dependencyResolutionManagement {
 implementation 'com.github.AppDeveloperAndroid:maintenance-sdk:1.0.3'
 
 
-**Application class**:
+### Step 3: Application class
 
 FirebaseApp.initializeApp(this);
 if (FirebaseApp.getApps(this).isEmpty()) {
-      throw new RuntimeException("Firebase not initialized");
+throw new RuntimeException("Firebase not initialized");
 }
         
 
-**Main Activity**
+### Step 4: Main Activity
 
 MaintenanceManager.init(getApplication(), "mgl_wah");
 MaintenanceManager.forceCheck();
 
 
-**Requirement**
+## Requirement
 
 * Minimum supported SDK: **API 23**
 * Requires internet connection
