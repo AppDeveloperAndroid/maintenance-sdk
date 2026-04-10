@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "662701941845",
+    "firebase_url": "https://maintenance-control-system-default-rtdb.firebaseio.com",
+    "project_id": "maintenance-control-system",
+    "storage_bucket": "maintenance-control-system.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:662701941845:android:b9470746401a8209f5a0dc",
+        "android_client_info": {
+          "package_name": "com.mgl.android.mglwah"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpnQVOr2qVC5gUIVNhqqZskK4WUO1QzDA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:662701941845:android:e08c059b3b35b9d0f5a0dc",
+        "android_client_info": {
+          "package_name": "com.network.maintenance"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpnQVOr2qVC5gUIVNhqqZskK4WUO1QzDA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:662701941845:android:23f7512648229f42f5a0dc",
+        "android_client_info": {
+          "package_name": "com.sealtracker.mgl"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpnQVOr2qVC5gUIVNhqqZskK4WUO1QzDA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
