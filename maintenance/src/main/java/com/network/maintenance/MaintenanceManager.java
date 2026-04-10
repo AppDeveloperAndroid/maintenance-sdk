@@ -54,6 +54,7 @@ public class MaintenanceManager {
             }
         });
 
+        initSecondaryFirebase(application);
         fetchConfig(appId);
     }
 
@@ -63,52 +64,27 @@ public class MaintenanceManager {
 
     private static void fetchConfig(String appId) {
 
-        FirebaseRemoteConfig remoteConfig;
-
-        try {
-            remoteConfig = FirebaseRemoteConfig.getInstance();
-        } catch (Exception e) {
-            Log.e("Maintenance", "RemoteConfig init failed", e);
+        if (secondaryRemoteConfig == null) {
+            Log.e("Maintenance", "Secondary Firebase not initialized");
             return;
         }
 
-        remoteConfig.setConfigSettingsAsync(
+        secondaryRemoteConfig.setConfigSettingsAsync(
                 new FirebaseRemoteConfigSettings.Builder()
                         .setMinimumFetchIntervalInSeconds(60)
                         .build()
         );
 
-        FirebaseRemoteConfig finalRemoteConfig = remoteConfig;
-        Log.d("FirebaseCheck", "App: " + FirebaseApp.getInstance().getName());
-        remoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
-            Log.d("Maintenance", "Fetch success: " + task.isSuccessful());
+        secondaryRemoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
+
+            Log.d("Maintenance", "Fetch success (SDK Firebase): " + task.isSuccessful());
 
             if (task.isSuccessful()) {
 
-//                String json = finalRemoteConfig.getString("maintenance_config");
-//                Log.d("Maintenance", "JSON: " + json);
-//                currentConfig = MaintenanceParser.getConfig(json, appId);
+                String json = secondaryRemoteConfig.getString("maintenance_config");
+                Log.d("Maintenance", "SDK JSON: " + json);
 
-                String json = finalRemoteConfig.getString("maintenance_config");
-                if (json == null || json.isEmpty() || json.equals("{}")) {
-                    Log.d("Maintenance", "Primary empty → using fallback");
-                    initSecondaryFirebase(appContext);
-                    if (secondaryRemoteConfig != null) {
-                        secondaryRemoteConfig.fetchAndActivate().addOnCompleteListener(task2 -> {
-
-                            if (task2.isSuccessful()) {
-                                String fallbackJson = secondaryRemoteConfig.getString("maintenance_config");
-                                Log.d("Maintenance", "Fallback JSON: " + fallbackJson);
-
-                                currentConfig = MaintenanceParser.getConfig(fallbackJson, appId);
-                                checkMaintenance();
-                            }
-                        });
-                    }
-                } else {
-                    Log.d("Maintenance", "Using PRIMARY Firebase");
-                    currentConfig = MaintenanceParser.getConfig(json, appId);
-                }
+                currentConfig = MaintenanceParser.getConfig(json, appId);
 
                 if (currentConfig != null) {
                     Log.d("Maintenance", "Parsed Config:");
@@ -117,10 +93,8 @@ public class MaintenanceManager {
                     Log.d("Maintenance", "endTime: " + currentConfig.endTime);
                     Log.d("Maintenance", "message: " + currentConfig.message);
                     Log.d("Maintenance", "title: " + currentConfig.title);
-                } else {
-                    Log.d("Maintenance", "Config is NULL");
                 }
-//                startChecking(appId);
+
                 if (!isCheckingStarted) {
                     isCheckingStarted = true;
                     startChecking(appId);
@@ -154,43 +128,27 @@ public class MaintenanceManager {
 
     private static void fetchLatestConfig(String appId) {
 
-        FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
+        if (secondaryRemoteConfig == null) return;
 
-        remoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
+        secondaryRemoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
+
             if (task.isSuccessful()) {
 
-//                String json = remoteConfig.getString("maintenance_config");
-//                Log.d("Maintenance", "Updated JSON: " + json);
-//                currentConfig = MaintenanceParser.getConfig(json, appId);
+                String json = secondaryRemoteConfig.getString("maintenance_config");
+                Log.d("Maintenance", "Updated SDK JSON: " + json);
 
-                String json = remoteConfig.getString("maintenance_config");
-                if (json == null || json.isEmpty() || json.equals("{}")) {
-                    Log.d("Maintenance", "Primary empty → fallback (update)");
-                    if (secondaryRemoteConfig != null) {
-                        secondaryRemoteConfig.fetchAndActivate().addOnCompleteListener(task2 -> {
-                            if (task2.isSuccessful()) {
-                                String fallbackJson = secondaryRemoteConfig.getString("maintenance_config");
-                                currentConfig = MaintenanceParser.getConfig(fallbackJson, appId);
-                                checkMaintenance();
-                            }
-                        });
-                    }
-                } else {
-                    currentConfig = MaintenanceParser.getConfig(json, appId);
-                }
+                currentConfig = MaintenanceParser.getConfig(json, appId);
 
                 if (currentConfig != null) {
-                    Log.d("Maintenance", "1 Parsed Config:");
-                    Log.d("Maintenance", "1 isActive: " + currentConfig.isActive);
-                    Log.d("Maintenance", "1 startTime: " + currentConfig.startTime);
-                    Log.d("Maintenance", "1 endTime: " + currentConfig.endTime);
-                    Log.d("Maintenance", "1 message: " + currentConfig.message);
-                    Log.d("Maintenance", "1 title: " + currentConfig.title);
-                } else {
-                    Log.d("Maintenance", "1 Config is NULL");
+                    Log.d("Maintenance", "Updated Parsed Config:");
+                    Log.d("Maintenance", "isActive: " + currentConfig.isActive);
+                    Log.d("Maintenance", "startTime: " + currentConfig.startTime);
+                    Log.d("Maintenance", "endTime: " + currentConfig.endTime);
+                    Log.d("Maintenance", "message: " + currentConfig.message);
+                    Log.d("Maintenance", "title: " + currentConfig.title);
                 }
 
-                checkMaintenance();
+//                checkMaintenance();
             }
         });
     }
