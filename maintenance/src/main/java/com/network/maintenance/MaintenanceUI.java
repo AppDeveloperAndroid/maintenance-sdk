@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.google.android.material.card.MaterialCardView;
+import androidx.cardview.widget.CardView;
 
 public class MaintenanceUI {
     private static AlertDialog blockingDialog;
@@ -23,7 +23,7 @@ public class MaintenanceUI {
                 ImageView ivIcon = view.findViewById(R.id.ivIcon);
                 TextView tvTitle = view.findViewById(R.id.tvTitle);
                 TextView tvDesc = view.findViewById(R.id.tvDesc);
-                MaterialCardView btnOk = view.findViewById(R.id.btnOk);
+                CardView btnOk = view.findViewById(R.id.btnOk);
 
                 tvTitle.setText(title);
                 tvDesc.setText(message);
@@ -57,7 +57,7 @@ public class MaintenanceUI {
             ImageView ivIcon = view.findViewById(R.id.ivIcon);
             TextView tvTitle = view.findViewById(R.id.tvTitle);
             TextView tvDesc = view.findViewById(R.id.tvDesc);
-            MaterialCardView btnOk = view.findViewById(R.id.btnOk);
+            CardView btnOk = view.findViewById(R.id.btnOk);
 
             tvTitle.setText(title);
             tvDesc.setText(message);
