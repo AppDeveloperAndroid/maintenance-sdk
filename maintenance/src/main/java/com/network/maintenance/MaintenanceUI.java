@@ -71,7 +71,6 @@ public class MaintenanceUI {
 
             if (blockingDialog != null && blockingDialog.isShowing()) {
                 blockingDialog.dismiss();
-                blockingDialog = null;
             }
         }
     }
