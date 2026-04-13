@@ -44,10 +44,7 @@ public class MaintenanceUI {
 
         } else if (state == MaintenanceState.BLOCKING) {
 
-            if (blockingDialog != null) {
-                blockingDialog.dismiss();
-                blockingDialog = null;
-            }
+            if (blockingDialog != null && blockingDialog.isShowing()) return;
 
             View view = activity.getLayoutInflater().inflate(R.layout.alert_dialog, null);
             ImageView ivIcon = view.findViewById(R.id.ivIcon);
