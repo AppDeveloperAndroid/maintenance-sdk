@@ -29,7 +29,7 @@ dependencies {
 
 ### Step 3: Base Activity or Main Activity
 ```java
-MaintenanceManager.init(getApplication(), "mgl_wah");
+MaintenanceManager.init(getApplication(), AppId);
 MaintenanceManager.forceCheck();
 ```
 
