@@ -39,6 +39,13 @@ public class MaintenanceUI {
                 dialog.show();
                 if (dialog.getWindow() != null) {
                     dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+                    int margin = 25; // dp
+                    float density = activity.getResources().getDisplayMetrics().density;
+                    int pxMargin = (int) (margin * density);
+
+                    int width = activity.getResources().getDisplayMetrics().widthPixels - (pxMargin * 2);
+                    dialog.getWindow().setLayout(width, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
                 }
             }
 
@@ -65,6 +72,14 @@ public class MaintenanceUI {
             blockingDialog.show();
             if (blockingDialog.getWindow() != null) {
                 blockingDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+                int margin = 25; // dp
+                float density = activity.getResources().getDisplayMetrics().density;
+                int pxMargin = (int) (margin * density);
+
+                int width = activity.getResources().getDisplayMetrics().widthPixels - (pxMargin * 2);
+                blockingDialog.getWindow().setLayout(width, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+
             }
 
         } else if (state == MaintenanceState.NONE) {
