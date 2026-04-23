@@ -6,4 +6,6 @@ public class MaintenanceModel {
     public long endTime;
     public String message;
     public String title;
+    public UpdateModel update;
 }
+

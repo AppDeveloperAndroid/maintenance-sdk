@@ -35,6 +35,8 @@ public class MaintenanceManager {
 //    private static Handler handler = new Handler();
     private static Handler handler = new Handler(android.os.Looper.getMainLooper());
 
+    private static boolean isUpdateDialogShowing = false;
+
     public static void init(Application application, String appId) {
 
         appContext = application;
@@ -101,6 +103,42 @@ public class MaintenanceManager {
                 }
             }
         });
+    }
+
+    private static void checkUpdate() {
+
+        if (currentConfig == null || currentConfig.update == null) return;
+
+        UpdateModel update = currentConfig.update;
+
+        if (!update.isActive) return;
+
+        int currentVersion = getAppVersionCode();
+
+        if (currentVersion < update.minVersion) {
+            showForceUpdate(update);
+        }
+    }
+
+    private static void showForceUpdate(UpdateModel update) {
+        if (currentActivity == null || isUpdateDialogShowing) return;
+        isUpdateDialogShowing = true;
+        MaintenanceUI.showUpdateDialog(
+                currentActivity,
+                update.title,
+                update.message,
+                update.navigateUrl
+        );
+    }
+
+    private static int getAppVersionCode() {
+        try {
+            return appContext.getPackageManager()
+                    .getPackageInfo(appContext.getPackageName(), 0)
+                    .versionCode;
+        } catch (Exception e) {
+            return 1;
+        }
     }
 
     private static long lastFetchTime = 0;
@@ -193,6 +231,8 @@ public class MaintenanceManager {
         String message = currentConfig != null ? currentConfig.message : "";
         String title = currentConfig != null ? currentConfig.title : "";
         MaintenanceUI.handleUI(currentActivity, state, title, message, currentConfig.startTime);
+
+        checkUpdate();
     }
 
     private static void initSecondaryFirebase(Application application) {

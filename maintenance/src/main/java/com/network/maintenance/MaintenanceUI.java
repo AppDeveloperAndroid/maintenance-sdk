@@ -3,7 +3,10 @@ package com.network.maintenance;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -103,5 +106,74 @@ public class MaintenanceUI {
         prefs.edit().putLong("last_warning_for", startTime).apply();
 
         return true;
+    }
+
+    public static void showUpdateDialog(Activity activity, String title, String message, String url) {
+
+        if (activity == null || activity.isFinishing() || activity.isDestroyed()) return;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity)
+                .setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Update", (d, w) -> openUrl(activity, url));
+
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private static final String TAG = "MaintenanceSDK";
+
+    private static void openUrl(Context context, String url) {
+
+        try {
+            Log.d(TAG, "Opening URL: " + url);
+
+            if (url != null && url.contains("play.google.com")) {
+
+                Uri uri = Uri.parse(url);
+                String packageName = uri.getQueryParameter("id");
+
+                Log.d(TAG, "Detected Play Store URL. Package: " + packageName);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("market://details?id=" + packageName));
+                intent.setPackage("com.android.vending");
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                context.startActivity(intent);
+
+                Log.d(TAG, "Opened in Play Store app");
+
+            } else {
+
+                Log.d(TAG, "Opening in browser / external handler");
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                context.startActivity(intent);
+
+                Log.d(TAG, "Opened URL successfully");
+
+            }
+
+        } catch (Exception e) {
+
+            Log.e(TAG, "Failed to open via primary intent. Falling back to browser", e);
+
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                context.startActivity(intent);
+
+                Log.d(TAG, "Fallback: Opened URL in browser");
+
+            } catch (Exception ex) {
+                Log.e(TAG, "Fallback also failed. Cannot open URL", ex);
+            }
+        }
     }
 }
