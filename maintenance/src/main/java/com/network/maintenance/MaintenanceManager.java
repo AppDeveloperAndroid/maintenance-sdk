@@ -105,21 +105,59 @@ public class MaintenanceManager {
         });
     }
 
+    private static final String TAG = "MaintenanceSDK";
+
     private static void checkUpdate() {
 
-        if (currentConfig == null || currentConfig.update == null) return;
+        Log.d(TAG, "checkUpdate() called");
+
+        if (currentConfig == null) {
+            Log.e(TAG, "currentConfig is NULL");
+            return;
+        }
+
+        if (currentConfig.update == null) {
+            Log.e(TAG, "Update config is NULL");
+            return;
+        }
 
         UpdateModel update = currentConfig.update;
 
-        if (!update.isActive) return;
+        Log.d(TAG, "Update isActive: " + update.isActive);
+
+        if (!update.isActive) {
+            Log.d(TAG, "Update is not active");
+            return;
+        }
 
         int currentVersion = getAppVersionCode();
 
+        Log.d(TAG, "Current Version: " + currentVersion);
+        Log.d(TAG, "Min Version: " + update.minVersion);
+
         if (currentVersion < update.minVersion) {
+            Log.d(TAG, "Force update condition met → showing dialog");
             showForceUpdate(update);
+        } else {
+            Log.d(TAG, "No update required");
         }
     }
 
+    private static int getAppVersionCode() {
+        try {
+            int version = appContext.getPackageManager()
+                    .getPackageInfo(appContext.getPackageName(), 0)
+                    .versionCode;
+
+            Log.d(TAG, "Fetched App Version: " + version);
+
+            return version;
+
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to get app version", e);
+            return 1;
+        }
+    }
     private static void showForceUpdate(UpdateModel update) {
         if (currentActivity == null || isUpdateDialogShowing) return;
         isUpdateDialogShowing = true;
@@ -131,15 +169,6 @@ public class MaintenanceManager {
         );
     }
 
-    private static int getAppVersionCode() {
-        try {
-            return appContext.getPackageManager()
-                    .getPackageInfo(appContext.getPackageName(), 0)
-                    .versionCode;
-        } catch (Exception e) {
-            return 1;
-        }
-    }
 
     private static long lastFetchTime = 0;
 
